@@ -1,0 +1,10 @@
+{
+  "Neo4j": {
+    "Uri": "bolt://localhost:7687",
+    "Username": "neo4j",
+    "Password": "sua-senha-neo4j"
+  },
+  "Claude": {
+    "ApiKey": "sk-or-v1-..."
+  }
+}

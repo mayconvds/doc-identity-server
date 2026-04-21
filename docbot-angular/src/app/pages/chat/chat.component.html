@@ -1,0 +1,122 @@
+<div class="docbot-root">
+  <div class="grid-bg"></div>
+  <div class="glow"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <button class="back-btn" (click)="goHome()" title="Voltar ao início">←</button>
+      <div class="logo-icon">📚</div>
+      <div>
+        <div class="logo-title">Doc<span>Bot</span></div>
+        <div class="logo-sub">RAG · Neo4j · {{ totalDocs }} documentos</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="seed-btn" (click)="seedNeo4j()" [disabled]="seeding || seeded">
+        <span *ngIf="seeding">⏳ Populando...</span>
+        <span *ngIf="seeded">✅ Neo4j OK</span>
+        <span *ngIf="!seeding && !seeded">🌱 Popular Neo4j</span>
+      </button>
+      <div class="header-badge">
+        <div class="badge-dot"></div>
+        Claude + Neo4j
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="isEmpty">
+      <div class="empty-icon">🔍</div>
+      <h1 class="empty-title">Documentação <span>Interna</span></h1>
+      <p class="empty-desc">
+        Backend ASP.NET Core + Neo4j como base de conhecimento. Clique em
+        <b>"Popular Neo4j"</b> no cabeçalho antes de começar.
+      </p>
+
+      <div class="docs-index">
+        <div class="doc-chip" *ngFor="let entry of categoryEntries"
+          [style.color]="getCategoryColor(entry[0])"
+          [style.border-color]="getCategoryBorder(entry[0])">
+          <b>{{ entry[1] }}</b> {{ entry[0] }}
+        </div>
+      </div>
+
+      <div class="suggestions">
+        <button class="suggestion-btn" *ngFor="let s of suggestions" (click)="sendSuggestion(s)">
+          <span class="suggestion-arrow">›</span>{{ s }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area" *ngIf="!isEmpty">
+
+      <ng-container *ngFor="let msg of messages">
+        <div class="msg-row user" *ngIf="msg.role === 'user'">
+          <div class="msg-bubble user">{{ msg.text }}</div>
+        </div>
+
+        <div class="msg-row assistant" *ngIf="msg.role === 'assistant'">
+          <div class="retrieved-tags" *ngIf="msg.docs && msg.docs.length > 0">
+            <span class="retrieved-tag" *ngFor="let doc of msg.docs"
+              [style.color]="getCategoryColor(doc.category)"
+              [style.border-color]="getCategoryBorder(doc.category)"
+              [style.background]="getCategoryBg(doc.category)">
+              📎 {{ doc.title }}
+            </span>
+          </div>
+          <div class="msg-bubble assistant">
+            <span [innerHTML]="msg.text"></span>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="msg-row assistant" *ngIf="loading">
+        <div class="typing-bubble">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <!-- RAG Panel -->
+      <div class="rag-panel" *ngIf="messages.length > 0 && messages[messages.length-1].role === 'assistant' && !loading">
+        <div class="rag-panel-header" (click)="toggleRagPanel()">
+          <span>🔎 {{ lastRetrievedDocs.length }} doc(s) recuperados do Neo4j</span>
+          <span>{{ showRagPanel ? '▲ ocultar' : '▼ ver' }}</span>
+        </div>
+        <ng-container *ngIf="showRagPanel">
+          <div class="rag-doc" *ngFor="let doc of lastRetrievedDocs">
+            <div class="rag-doc-title" [style.color]="getCategoryColor(doc.category)">
+              [{{ doc.category }}] {{ doc.title }}
+              <span class="rag-score">score: {{ doc.score }}</span>
+            </div>
+            {{ doc.content.slice(0, 140) }}…
+          </div>
+        </ng-container>
+      </div>
+
+      <div #chatBottom></div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-area">
+      <div class="input-row">
+        <div class="input-wrap">
+          <input class="input-field" type="text"
+            placeholder="Pergunte sobre deploy, auth, banco de dados..."
+            [(ngModel)]="inputText"
+            (keydown)="onKeyDown($event)"
+            [disabled]="loading" />
+        </div>
+        <button class="send-btn" (click)="send()" [disabled]="!inputText.trim() || loading">➤</button>
+      </div>
+      <div class="input-hint">
+        session: <b>{{ sessionId.slice(0, 8) }}…</b> · Neo4j retrieval · geração via <b>Claude</b>
+      </div>
+    </div>
+
+  </main>
+</div>

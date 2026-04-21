@@ -1,0 +1,75 @@
+<div class="home-root">
+  <div class="grid-bg"></div>
+  <div class="glow"></div>
+  <div class="glow glow--right"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">📚</div>
+      <span class="logo-title">Doc<span>Bot</span></span>
+    </div>
+    <div class="header-badge">
+      <div class="badge-dot"></div>
+      Claude + Neo4j
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-tag">Documentação Interna · RAG Pipeline</div>
+    <h1 class="hero-title">
+      Converse com a sua<br>
+      <span>documentação</span>
+    </h1>
+    <p class="hero-desc">
+      Faça perguntas em linguagem natural sobre deploy, autenticação,
+      banco de dados e infraestrutura. Respostas geradas com contexto
+      real extraído do seu base de conhecimento.
+    </p>
+    <button class="cta-btn" (click)="goToChat()">
+      <span>Acessar o Chat</span>
+      <span class="cta-arrow">→</span>
+    </button>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="feature-card" *ngFor="let f of features">
+      <div class="feature-icon">{{ f.icon }}</div>
+      <div class="feature-title">{{ f.title }}</div>
+      <div class="feature-desc">{{ f.desc }}</div>
+    </div>
+  </section>
+
+  <!-- Knowledge Base -->
+  <section class="kb-section">
+    <div class="kb-header">
+      <span class="kb-label">Base de Conhecimento</span>
+      <span class="kb-count">10 documentos indexados</span>
+    </div>
+    <div class="kb-grid">
+      <div
+        class="kb-card"
+        *ngFor="let cat of categories"
+        [style.--accent]="getCategoryColor(cat.name)"
+      >
+        <div class="kb-card-icon">{{ cat.icon }}</div>
+        <div class="kb-card-name">{{ cat.name }}</div>
+        <div class="kb-card-count">{{ cat.count }} doc{{ cat.count > 1 ? 's' : '' }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer CTA -->
+  <section class="footer-cta">
+    <button class="cta-btn" (click)="goToChat()">
+      <span>Começar agora</span>
+      <span class="cta-arrow">→</span>
+    </button>
+  </section>
+
+  <footer class="footer">
+    <span>DocBot · ASP.NET Core + Neo4j + Claude</span>
+  </footer>
+</div>

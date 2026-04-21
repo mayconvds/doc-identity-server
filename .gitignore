@@ -1,0 +1,31 @@
+# Rider / JetBrains
+.idea/
+
+# Visual Studio / VS Code
+.vs/
+*.user
+.vscode/
+
+# .NET build output
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.nupkg
+
+# Secrets — nunca commitar
+appsettings.Development.json
+appsettings.Production.json
+appsettings.*.local.json
+*.pfx
+*.p12
+secrets.json
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
