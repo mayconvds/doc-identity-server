@@ -2,6 +2,7 @@ using DocBotApi.Data;
 using DocBotApi.Models;
 using DocBotApi.Services;
 using Serilog;
+using Serilog.Settings.Configuration;
 
 // ── Logger bootstrap ─────────────────────────────────────────────────────────
 Log.Logger = new LoggerConfiguration()
@@ -14,12 +15,19 @@ try
 
     // ── Serilog ───────────────────────────────────────────────────────────────
     builder.Host.UseSerilog((ctx, lc) =>
-        lc.ReadFrom.Configuration(ctx.Configuration));
+    {
+        var options = new ConfigurationReaderOptions(
+            typeof(ConsoleLoggerConfigurationExtensions).Assembly
+        );
+
+        lc.ReadFrom.Configuration(ctx.Configuration, options);
+    });
+    
 
     // ── CORS ──────────────────────────────────────────────────────────────────
     var allowedOrigins = builder.Configuration
         .GetSection("Cors:AllowedOrigins")
-        .Get<string[]>() ?? ["http://localhost:4200"];
+        .Get<string[]>() ?? ["http://localhost:4200", "https://docapiidentity.dbospace.com.br"];
 
     builder.Services.AddCors(options =>
         options.AddDefaultPolicy(policy =>

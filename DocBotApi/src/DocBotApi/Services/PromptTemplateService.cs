@@ -8,7 +8,7 @@ public class PromptTemplateService
 
     public PromptTemplateService(IWebHostEnvironment env)
     {
-        _templatePath = Path.Combine(env.ContentRootPath, "prompts", "system-template.txt");
+        _templatePath = Path.Combine(env.ContentRootPath, "Prompts", "system-template.txt");
     }
 
     public string Render(PromptConfig config, string question, string context)
