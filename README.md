@@ -66,3 +66,8 @@ Após subir a API, popule a base:
 ```bash
 curl -X POST http://localhost:5000/api/seed
 ```
+
+### 3. Public Backend Linux
+```bash
+dotnet publish -c Release --no-self-contained true -p:PublishSingleFile=true -r linux-x64 /p:EnvironmentName=Production
+```
